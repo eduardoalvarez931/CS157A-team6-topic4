@@ -6,17 +6,17 @@ public class Notes {
 /**
  * 
  * CREATE TABLE patient (
+    thc_number                     VARCHAR(6) NOT NULL,
     first_name                     VARCHAR(15) NOT NULL,
     last_name                      VARCHAR(25) NOT NULL,
     ssn							   VARCHAR(10) NOT NULL,
     zip_code                       SMALLINT NOT NULL,
-    city                           NVARCHAR(32) NOT NULL,
+    city                           VARCHAR(32) NOT NULL,
     state                          VARCHAR(25) NOT NULL,
     country						   VARCHAR(25) NOT NULL,
-    thc_number                     VARCHAR(6) NOT NULL,
     dob							   DATE NOT NULL
 );
-ALTER TABLE patient ADD CONSTRAINT patient_pk PRIMARY KEY ( patient_id );
+ALTER TABLE patient ADD CONSTRAINT patient_pk PRIMARY KEY ( thc_number );
 
 CREATE TABLE visit (
     visit_id 		INT NOT NULL,
@@ -30,9 +30,9 @@ ALTER TABLE visit ADD CONSTRAINT patient_fk FOREIGN KEY ( thc ) REFERENCES patie
 
 CREATE TABLE audiological (
 	visit_id 			INT NOT NULL,
-    comments 			VARCHAR(256),
-    r25                 NUMERIC(28) NOT NULL,
-    l25                 NUMERIC(28) NOT NULL,
+    comments 			VARCHAR(255),
+    r25                 SMALLINT NOT NULL,
+    l25                 SMALLINT NOT NULL,
     r50                 NUMERIC(28) NOT NULL,
     l50                 NUMERIC(28) NOT NULL,
     r1                  NUMERIC(28) NOT NULL,
@@ -92,29 +92,14 @@ CREATE TABLE audiological (
     ll12				NUMERIC(28) NOT NULL,
     lltp				NUMERIC(28) NOT NULL
 );
-ALTER TABLE audiological ADD CONSTRAINT audiological_pk PRIMARY KEY ( audiotest_id );
-ALTER TABLE audiological ADD CONSTRAINT visit_fk FOREIGN KEY ( visit_id ) REFERENCES visit (visit_id);
-
-CREATE TABLE medication (
-    medication_id                  SMALLINT NOT NULL,
-    generic_id					   SMALLINT NOT NULL,
-    chem_id						   SMALLINT NOT NULL,
-    disease_id					   SMALLINT NOT NULL,
-    medication_name                VARCHAR(25) NOT NULL,
-    medication_description         VARCHAR(256) NOT NULL,
-    usual_dose                     NUMERIC(28) NOT NULL
-);
-ALTER TABLE medication ADD CONSTRAINT medication_pk PRIMARY KEY ( medication_id );
-ALTER TABLE medication ADD CONSTRAINT disease_fk FOREIGN KEY ( disease_id ) REFERENCES disease (disease_id);
-ALTER TABLE medication ADD CONSTRAINT generic_fk FOREIGN KEY ( generic_id ) REFERENCES generic (generic_id);
-ALTER TABLE medication ADD CONSTRAINT cat_chem_fk FOREIGN KEY ( chem_id ) REFERENCES cat_chem (chemical_id);
+ALTER TABLE audiological ADD CONSTRAINT audiological_visit_fk FOREIGN KEY ( visit_id ) REFERENCES visit (visit_id);
 
 CREATE TABLE cat_chem (
     chemical_id 			SMALLINT NOT NULL,
     chemical_name 			VARCHAR(25) NOT NULL,
     chemical_description 	VARCHAR(256) NOT NULL
 );
-ALTER TABLE chemical ADD CONSTRAINT chemical_pk PRIMARY KEY ( chemical_id );
+ALTER TABLE cat_chem ADD CONSTRAINT chemical_pk PRIMARY KEY ( chemical_id );
 
 CREATE TABLE disease (
     disease_id 			SMALLINT NOT NULL,
@@ -130,6 +115,20 @@ CREATE TABLE generic (
 );
 ALTER TABLE generic ADD CONSTRAINT generic_pk PRIMARY KEY ( generic_id );
 
+CREATE TABLE medication (
+    medication_id                  SMALLINT NOT NULL,
+    generic_id					   SMALLINT NOT NULL,
+    chem_id						   SMALLINT NOT NULL,
+    disease_id					   SMALLINT NOT NULL,
+    medication_name                VARCHAR(25) NOT NULL,
+    medication_description         VARCHAR(256) NOT NULL,
+    usual_dose                     NUMERIC(28) NOT NULL
+);
+ALTER TABLE medication ADD CONSTRAINT medication_pk PRIMARY KEY ( medication_id );
+ALTER TABLE medication ADD CONSTRAINT disease_fk FOREIGN KEY ( disease_id ) REFERENCES disease (disease_id);
+ALTER TABLE medication ADD CONSTRAINT generic_fk FOREIGN KEY ( generic_id ) REFERENCES generic (generic_id);
+ALTER TABLE medication ADD CONSTRAINT cat_chem_fk FOREIGN KEY ( chem_id ) REFERENCES cat_chem (chemical_id);
+
 CREATE TABLE pharmacology (
     medicament_id     SMALLINT NOT NULL,
     visit_id		  INT NOT NULL,
@@ -137,13 +136,8 @@ CREATE TABLE pharmacology (
     duration_mo       NUMERIC(28)NOT NULL,
     comments		  VARCHAR(256)
 );
-ALTER TABLE pharmacology ADD CONSTRAINT pharmacology_pk PRIMARY KEY ( pharmacology_id );
 ALTER TABLE pharmacology ADD CONSTRAINT medicament_fk FOREIGN KEY (medicament_id) REFERENCES medication(medication_id);
-ALTER TABLE pharmacology ADD CONSTRAINT visit_fk FOREIGN KEY (visit_id) REFERENCES visit (visit_id);
-
-
-
-	
+ALTER TABLE pharmacology ADD CONSTRAINT pharmacology_visit_fk FOREIGN KEY (visit_id) REFERENCES visit (visit_id);
  * 
  * 
  */
