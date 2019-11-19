@@ -2,5 +2,5 @@ package teamproj;
 
 public class Visit {
 	private int visitID;
-	private 
+	private D
 }
