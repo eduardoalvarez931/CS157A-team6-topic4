@@ -1,4 +1,4 @@
-package teamproj;
+package SQL;
 
 import java.sql.*;
 import java.util.StringTokenizer;
