@@ -1,0 +1,51 @@
+package jdbcTutorial;
+
+import javafx.application.Application; 
+import javafx.scene.Scene; 
+import javafx.scene.layout.*; 
+import javafx.stage.Stage; 
+import javafx.scene.Group; 
+import javafx.scene.control.*; 
+import javafx.geometry.Insets; 
+  
+public class MainApplication extends Application {
+
+    // launch the application
+    public void start(Stage stage) { 
+
+        // set title for the stage 
+        stage.setTitle("Team 6 Project Topic 4"); 
+  
+        // add a stack pane to add multiple panes to the same scene
+        StackPane rootPane = new StackPane();
+        
+        // create a tab pane 
+        TabPane tabPane = new TabPane(); 
+  
+        // create audiological and pharmacology tabs
+        AudiologicalTab audiologicalTab = new AudiologicalTab("Audiological"); // diego
+        PharmacologyTab pharmacologyTab = new PharmacologyTab("Pharmacology");
+        
+        // add tabs to tab pane
+        tabPane.getTabs().add(audiologicalTab);
+        tabPane.getTabs().add(pharmacologyTab);
+  
+        // add all the child panes to the root pane        
+        rootPane.getChildren().addAll(tabPane);  // **ONLY tabPane ADDED HERE?**
+        
+        // create a scene
+        Scene scene = new Scene(rootPane, 600, 500); 
+        // set the scene
+        stage.setScene(scene); 
+        stage.show(); 
+    } 
+  
+    // Main Method 
+    public static void main(String args[]) 
+    { 
+  
+        // launch the application 
+        launch(args); 
+    } 
+} 
+
