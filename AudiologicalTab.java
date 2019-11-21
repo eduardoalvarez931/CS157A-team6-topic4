@@ -1,5 +1,7 @@
 package jdbcTutorial;
 
+package teamproj;
+
 import javafx.application.Application; 
 import javafx.scene.Scene; 
 import javafx.scene.layout.*; 
@@ -61,23 +63,20 @@ public class AudiologicalTab extends Tab {
         // add components to grid
         audiologicalGridPane.add(patientNameLabel, 0, 0);
         audiologicalGridPane.add(thcNumLabel, 1, 0);
-        audiologicalGridPane.add(sequenceNumberLabel, 2, 0);
-        audiologicalGridPane.add(visitsDate, 3, 0);
-        
         audiologicalGridPane.add(pureToneAudiogramLabel, 0, 2);
         audiologicalGridPane.add(tinnitusLabel, 0, 13);
         
-        audiologicalGridPane.add(rightEarLabel, 2, 2);
-        audiologicalGridPane.add(r25CheckBox, 2, 3);
-        audiologicalGridPane.add(r50CheckBox, 2, 4);
-        audiologicalGridPane.add(r1CheckBox, 2, 5);
-        audiologicalGridPane.add(r2CheckBox, 2, 6);
-        audiologicalGridPane.add(r3CheckBox, 2, 7);
-        audiologicalGridPane.add(r4CheckBox, 2, 8);
-        audiologicalGridPane.add(r6CheckBox, 2, 9);
-        audiologicalGridPane.add(r8CheckBox, 2, 10);
-        audiologicalGridPane.add(r10CheckBox, 2, 11);
-        audiologicalGridPane.add(r12CheckBox, 2, 12);
+        audiologicalGridPane.add(rightEarLabel, 3, 2);
+        audiologicalGridPane.add(r25CheckBox, 3, 3);
+        audiologicalGridPane.add(r50CheckBox, 3, 4);
+        audiologicalGridPane.add(r1CheckBox, 3, 5);
+        audiologicalGridPane.add(r2CheckBox, 3, 6);
+        audiologicalGridPane.add(r3CheckBox, 3, 7);
+        audiologicalGridPane.add(r4CheckBox, 3, 8);
+        audiologicalGridPane.add(r6CheckBox, 3, 9);
+        audiologicalGridPane.add(r8CheckBox, 3, 10);
+        audiologicalGridPane.add(r10CheckBox, 3, 11);
+        audiologicalGridPane.add(r12CheckBox, 3, 12);
         
         audiologicalGridPane.add(leftEarLabel, 1, 2);
         audiologicalGridPane.add(l25CheckBox, 1, 3);
@@ -95,13 +94,15 @@ public class AudiologicalTab extends Tab {
         Label pitchMatch = new Label("Tinnitus Pitch Match:");
         audiologicalGridPane.add(pitchMatch, 0, 14);
         Label tpr = new Label("TP Right Ear:");
-        TextField tprTextField = new TextField("Hz");
+        TextField tprTextField = new TextField();
+        tprTextField.setPromptText("Enter in Hz");
         audiologicalGridPane.add(tpr, 3, 14);
         audiologicalGridPane.add(tprTextField, 4, 14);
         
       //left ear tinnitus test section
         Label tpl = new Label("TP Left Ear:");
-        TextField tplTextField = new TextField("Hz");
+        TextField tplTextField = new TextField();
+        tplTextField.setPromptText("Enter in Hz");
         audiologicalGridPane.add(tpl, 1, 14);
         audiologicalGridPane.add(tplTextField, 2, 14);
         
@@ -118,8 +119,6 @@ public class AudiologicalTab extends Tab {
         CheckBox wnLBox = new CheckBox("WN");
 
         audiologicalGridPane.add(matchTypeLabel, 0, 15);
-//        audiologicalGridPane.add(leftEarLabel, 1, 15);
-//        audiologicalGridPane.add(rightEarLabel, 2, 15);
         
         //left ear options
         audiologicalGridPane.add(ptLBox, 1, 16);
@@ -128,79 +127,118 @@ public class AudiologicalTab extends Tab {
         audiologicalGridPane.add(wnLBox, 1, 19);
         
         //right ear options
-        audiologicalGridPane.add(ptRBox, 2, 16);
-        audiologicalGridPane.add(nbRBox, 2, 17);
-        audiologicalGridPane.add(nbnRBox, 2, 18);
-        audiologicalGridPane.add(wnRBox, 2, 19);
+        audiologicalGridPane.add(ptRBox, 3, 16);
+        audiologicalGridPane.add(nbRBox, 3, 17);
+        audiologicalGridPane.add(nbnRBox, 3, 18);
+        audiologicalGridPane.add(wnRBox, 3, 19);
 
         Label loudnessMatch = new Label("Tinnitus loudness match:");
         audiologicalGridPane.add(loudnessMatch, 0, 20);
 
         Label tlr = new Label("T LR:");
-        TextField tlrTextField = new TextField("in dB");
-        audiologicalGridPane.add(tlr, 3, 20);
-        audiologicalGridPane.add(tlrTextField, 4, 20);
+        TextField tlrTextField = new TextField();
+        tlrTextField.setPromptText("Enter in dB");
+        audiologicalGridPane.add(tlr, 3, 21);
+        audiologicalGridPane.add(tlrTextField, 4, 21);
         
         Label tll = new Label("T LL:");
-        TextField tllTextField = new TextField("in dB");
-        audiologicalGridPane.add(tll, 1, 20);
-        audiologicalGridPane.add(tllTextField, 2, 20);
+        TextField tllTextField = new TextField();
+        tllTextField.setPromptText("Enter in dB");
+        audiologicalGridPane.add(tll, 1, 21);
+        audiologicalGridPane.add(tllTextField, 2, 21);
         
         Label thresHearing = new Label("Threshold of Hearing:");
-        audiologicalGridPane.add(thresHearing, 0, 21);
+        audiologicalGridPane.add(thresHearing, 0, 22);
         
-        Label thrLabel = new Label();
-        Label tlrsLabel =new Label();
-        Label trlsLabel = new Label();
-        Label thlLabel = new Label();
-        Label tlsLabel = new Label();
-        
+        //right ear
+        Label thrLabel = new Label("Th R:");
+        audiologicalGridPane.add(thrLabel, 3, 23);
         TextField thr = new TextField();
-        TextField trls = new TextField();
-        TextField thl = new TextField();
-        TextField tls = new TextField();
-        audiologicalGridPane.add(thrLabel, 3,21);
-        audiologicalGridPane.add(thlLabel, 1, 21);
-        //audiologicalGridPane.add(child, columnIndex, rowIndex);
-        audiologicalGridPane.add(trlsLabel, 3, 22);
+        thr.setPromptText("Enter in dB");
+        audiologicalGridPane.add(thr, 4, 23);
         
+        Label tlrsLabel =new Label("T RLs:");
+        audiologicalGridPane.add(tlrsLabel, 3, 24);
+        TextField tlrs = new TextField();
+        tlrs.setPromptText("Enter in dB");
+        audiologicalGridPane.add(tlrs, 4, 24);
+        
+        //left ear
+        Label thlLabel = new Label("Th L:");
+        audiologicalGridPane.add(thlLabel, 1, 23);
+        
+        Label tlsLabel = new Label("T Ls:");
+        audiologicalGridPane.add(tlsLabel, 1, 24);
+         
+        //left ear
+        TextField thl = new TextField();
+        thl.setPromptText("Enter in dB");
+        audiologicalGridPane.add(thl, 2, 23);
+        TextField tls = new TextField();
+        tls.setPromptText("Enter in dB");
+        audiologicalGridPane.add(tls, 2, 24);
+
         //WNR and WNL test section
         Label wnrLabel = new Label("WNR:"); 
         TextField wnr = new TextField();
+        audiologicalGridPane.add(wnrLabel, 3, 25);
+        audiologicalGridPane.add(wnr, 4, 25);
+        
         
         Label wnllabel = new Label("WNL:");
         TextField wnl = new TextField();
+        audiologicalGridPane.add(wnllabel, 1, 25);
+        audiologicalGridPane.add(wnl, 2, 25);
         
         //minimal masking level test section
         Label minMaskLvl = new Label("Minimal Masking Level:");
+        audiologicalGridPane.add(minMaskLvl, 0, 26);
         
-        Label mrrLabel = new Label("MRR");
+        Label mrrLabel = new Label("MRR:");
         TextField mrrTextField = new TextField();
+        audiologicalGridPane.add(mrrLabel, 3, 27);
+        audiologicalGridPane.add(mrrTextField, 4, 27);
         
-        Label mrbLabel = new Label("MRB");
+        Label mrbLabel = new Label("MRB:");
         TextField mrbTextField = new TextField();
+        audiologicalGridPane.add(mrbLabel, 3, 28);
+        audiologicalGridPane.add(mrbTextField, 4, 28);
         
-        Label mbrLabel = new Label("MBR");
+        Label mbrLabel = new Label("MBR:");
         TextField mbrTextField = new TextField();
+        audiologicalGridPane.add(mbrLabel, 3, 29);
+        audiologicalGridPane.add(mbrTextField, 4, 29);
         
-        Label mrlLabel = new Label("MRL");
+        Label mrlLabel = new Label("MRL:");
         TextField mrlTextField = new TextField();
+        audiologicalGridPane.add(mrlLabel, 1, 27);
+        audiologicalGridPane.add(mrlTextField, 2, 27);
         
-        Label mlbLabel = new Label("MLB");
+        Label mlbLabel = new Label("MLB:");
         TextField mlbTextField = new TextField();
+        audiologicalGridPane.add(mlbLabel, 1, 28);
+        audiologicalGridPane.add(mlbTextField, 2, 28);
         
-        Label mblLabel = new Label("MBL");
-        TextField mbl = new TextField();
+        Label mblLabel = new Label("MBL:");
+        TextField mblTextField = new TextField();
+        audiologicalGridPane.add(mblLabel, 1, 29);
+        audiologicalGridPane.add(mblTextField, 2, 29);
         
         //sd test section
-        Label rsdLabel = new Label("R SD");
+        Label rsdLabel = new Label("R SD:");
         TextField rsdTextField = new TextField();
+        audiologicalGridPane.add(rsdLabel, 3, 30);
+        audiologicalGridPane.add(rsdTextField, 4, 30);
         
-        Label lsdLabel = new Label("L SD");
+        Label lsdLabel = new Label("L SD:");
         TextField lsdTextField = new TextField();
+        audiologicalGridPane.add(lsdLabel, 1, 30);
+        audiologicalGridPane.add(lsdTextField, 2, 30);
         
         
         //pure tone Loudness discomfort level test section
+        Label loudnessDiscomfort = new Label("Pure Tone Loudness Discomfort Level:");
+        audiologicalGridPane.add(loudnessDiscomfort, 0, 31);
         
         // right ear loudness buttons
         CheckBox lr50CheckBox = new CheckBox("LR50");
@@ -211,10 +249,20 @@ public class AudiologicalTab extends Tab {
         CheckBox lr6CheckBox = new CheckBox("LR6");
         CheckBox lr8CheckBox = new CheckBox("LR8");
         CheckBox lr12CheckBox = new CheckBox("LR12");
+        audiologicalGridPane.add(lr50CheckBox, 3, 32);
+        audiologicalGridPane.add(lr1CheckBox, 3, 33);
+        audiologicalGridPane.add(lr2CheckBox, 3, 34);
+        audiologicalGridPane.add(lr3CheckBox, 3, 35);
+        audiologicalGridPane.add(lr4CheckBox, 3, 36);
+        audiologicalGridPane.add(lr6CheckBox, 3, 37);
+        audiologicalGridPane.add(lr8CheckBox, 3, 38);
+        audiologicalGridPane.add(lr12CheckBox, 3, 39);
         
         //TP left and right ear
         CheckBox lrtp = new CheckBox("LRTP");
+        audiologicalGridPane.add(lrtp, 3, 40);
         CheckBox lltp = new CheckBox("LLTP");
+        audiologicalGridPane.add(lltp, 1, 40);
         
         CheckBox ll50CheckBox = new CheckBox("LL50");
         CheckBox ll1CheckBox = new CheckBox("LL1");
@@ -224,10 +272,26 @@ public class AudiologicalTab extends Tab {
         CheckBox ll6CheckBox = new CheckBox("LL6");
         CheckBox ll8CheckBox = new CheckBox("LL8");
         CheckBox ll12CheckBox = new CheckBox("LL12");
+        audiologicalGridPane.add(ll50CheckBox, 1, 32);
+        audiologicalGridPane.add(ll1CheckBox, 1, 33);
+        audiologicalGridPane.add(ll2CheckBox, 1, 34);
+        audiologicalGridPane.add(ll3CheckBox, 1, 35);
+        audiologicalGridPane.add(ll4CheckBox, 1, 36);
+        audiologicalGridPane.add(ll6CheckBox, 1, 37);
+        audiologicalGridPane.add(ll8CheckBox, 1, 38);
+        audiologicalGridPane.add(ll12CheckBox, 1, 39);
         
+        Label comment = new Label("Additional Comments:");
+        audiologicalGridPane.add(comment, 0, 41);
         TextArea commentSection = new TextArea();
+        commentSection.setMaxWidth(200);
+        commentSection.setMaxHeight(100);
+        audiologicalGridPane.add(commentSection, 0, 42);
 
-        
+        Button saveButton = new Button("Save");
+        Button cancel = new Button("Cancel");
+        audiologicalGridPane.add(saveButton, 2, 43);
+        audiologicalGridPane.add(cancel, 3, 43);
         
         this.setContent(audiologicalGridPane);
 	}
