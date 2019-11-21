@@ -35,7 +35,7 @@ public class MainApplication extends Application {
         rootPane.setContent(tabPane);
         
         // create a scene
-        Scene scene = new Scene(rootPane, 100, 100);
+        Scene scene = new Scene(rootPane, 850, 700);
         // set the scene
         stage.setScene(scene); 
         stage.show(); 
