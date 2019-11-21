@@ -17,7 +17,7 @@ public class MainApplication extends Application {
         stage.setTitle("Team 6 Project Topic 4"); 
   
         // add a stack pane to add multiple panes to the same scene
-        StackPane rootPane = new StackPane();
+        ScrollPane rootPane = new ScrollPane();
         
         // create a tab pane 
         TabPane tabPane = new TabPane(); 
@@ -31,13 +31,16 @@ public class MainApplication extends Application {
         tabPane.getTabs().add(pharmacologyTab);
   
         // add all the child panes to the root pane        
-        rootPane.getChildren().addAll(tabPane);  // **ONLY tabPane ADDED HERE?**
+        //rootPane.getChildren().addAll(tabPane);  // **ONLY tabPane ADDED HERE?**
+        rootPane.setContent(tabPane);
         
         // create a scene
-        Scene scene = new Scene(rootPane, 600, 500); 
+        Scene scene = new Scene(rootPane, 100, 100);
         // set the scene
         stage.setScene(scene); 
         stage.show(); 
+        
+        pharmacologyTab.passStage(stage);
     } 
   
     // Main Method 
