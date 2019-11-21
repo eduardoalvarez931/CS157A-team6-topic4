@@ -61,6 +61,9 @@ public class AudiologicalTab extends Tab {
         // add components to grid
         audiologicalGridPane.add(patientNameLabel, 0, 0);
         audiologicalGridPane.add(thcNumLabel, 1, 0);
+        audiologicalGridPane.add(sequenceNumberLabel, 2, 0);
+        audiologicalGridPane.add(visitsDate, 3, 0);
+        
         audiologicalGridPane.add(pureToneAudiogramLabel, 0, 2);
         audiologicalGridPane.add(tinnitusLabel, 0, 13);
         
