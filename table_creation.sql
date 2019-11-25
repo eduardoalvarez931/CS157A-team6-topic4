@@ -115,7 +115,7 @@ CREATE TABLE medication (
     disease_id					   SMALLINT NOT NULL,
     medication_name                VARCHAR(25) NOT NULL,
     medication_description         VARCHAR(256) NOT NULL,
-    usual_dose                     NUMERIC(28) NOT NULL
+    usual_dose                     VARCHAR(45) NOT NULL
 );
 ALTER TABLE medication ADD CONSTRAINT medication_pk PRIMARY KEY ( medication_id );
 ALTER TABLE medication ADD CONSTRAINT disease_fk FOREIGN KEY ( disease_id ) REFERENCES disease (disease_id);
@@ -125,7 +125,7 @@ ALTER TABLE medication ADD CONSTRAINT cat_chem_fk FOREIGN KEY ( chem_id ) REFERE
 CREATE TABLE pharmacology (
     medicament_id     SMALLINT NOT NULL,
     visit_id		  INT NOT NULL,
-    dose              NUMERIC(28) NOT NULL,
+    dose              VARCHAR(20) NOT NULL,
     duration_mo       NUMERIC(28)NOT NULL,
     comments		  VARCHAR(256)
 );
