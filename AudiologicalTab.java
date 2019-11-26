@@ -1,6 +1,6 @@
-package jdbcTutorial;
-
 package teamproj;
+
+import java.util.ArrayList;
 
 import javafx.application.Application; 
 import javafx.scene.Scene; 
@@ -12,10 +12,14 @@ import javafx.geometry.Insets;
 
 public class AudiologicalTab extends Tab {
 	private GridPane audiologicalGridPane;
+	private LeftEar left;
+	private RightEar right;
 	
 	public AudiologicalTab(String s) {
-		super(s);
-		
+		super(s);		
+		left = new LeftEar();
+		right = new RightEar();
+
 		// create audiological grid
         GridPane audiologicalGridPane = new GridPane();
         audiologicalGridPane.setPadding(new Insets(10, 10, 10, 10)); 
@@ -45,7 +49,7 @@ public class AudiologicalTab extends Tab {
         CheckBox r6CheckBox = new CheckBox("R6");
         CheckBox r8CheckBox = new CheckBox("R8");
         CheckBox r10CheckBox = new CheckBox("R10");
-        CheckBox r12CheckBox = new CheckBox("R12");
+        CheckBox r12CheckBox = new CheckBox("R12");       
         
         // left ear
         Label leftEarLabel = new Label("Left Ear:");
@@ -108,29 +112,15 @@ public class AudiologicalTab extends Tab {
         
         //Match type section
         Label matchTypeLabel = new Label("Tinnitus Match Type:");
-        CheckBox ptRBox = new CheckBox("PT");
-        CheckBox nbRBox = new CheckBox("NB");
-        CheckBox nbnRBox = new CheckBox("NBN");
-        CheckBox wnRBox = new CheckBox("WN");
-        
-        CheckBox ptLBox = new CheckBox("PT");
-        CheckBox nbLBox = new CheckBox("NB");
-        CheckBox nbnLBox = new CheckBox("NBN");
-        CheckBox wnLBox = new CheckBox("WN");
-
         audiologicalGridPane.add(matchTypeLabel, 0, 15);
         
-        //left ear options
-        audiologicalGridPane.add(ptLBox, 1, 16);
-        audiologicalGridPane.add(nbLBox, 1, 17);
-        audiologicalGridPane.add(nbnLBox, 1, 18);
-        audiologicalGridPane.add(wnLBox, 1, 19);
-        
-        //right ear options
-        audiologicalGridPane.add(ptRBox, 3, 16);
-        audiologicalGridPane.add(nbRBox, 3, 17);
-        audiologicalGridPane.add(nbnRBox, 3, 18);
-        audiologicalGridPane.add(wnRBox, 3, 19);
+        final ComboBox matchTypeLeftOptions = new ComboBox();
+        matchTypeLeftOptions.getItems().addAll(" ", "PT", "NB", "NBN", "WN");
+        audiologicalGridPane.add(matchTypeLeftOptions, 1, 15);
+
+        final ComboBox matchTypeRightOptions = new ComboBox();
+        matchTypeRightOptions.getItems().addAll(" ", "PT", "NB", "NBN", "WN");
+        audiologicalGridPane.add(matchTypeRightOptions, 3, 15);
 
         Label loudnessMatch = new Label("Tinnitus loudness match:");
         audiologicalGridPane.add(loudnessMatch, 0, 20);
@@ -181,12 +171,14 @@ public class AudiologicalTab extends Tab {
         //WNR and WNL test section
         Label wnrLabel = new Label("WNR:"); 
         TextField wnr = new TextField();
+        wnr.setPromptText("Enter in dB");
         audiologicalGridPane.add(wnrLabel, 3, 25);
         audiologicalGridPane.add(wnr, 4, 25);
         
         
         Label wnllabel = new Label("WNL:");
         TextField wnl = new TextField();
+        wnl.setPromptText("Enter in dB");
         audiologicalGridPane.add(wnllabel, 1, 25);
         audiologicalGridPane.add(wnl, 2, 25);
         
@@ -196,42 +188,50 @@ public class AudiologicalTab extends Tab {
         
         Label mrrLabel = new Label("MRR:");
         TextField mrrTextField = new TextField();
+        mrrTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(mrrLabel, 3, 27);
         audiologicalGridPane.add(mrrTextField, 4, 27);
         
         Label mrbLabel = new Label("MRB:");
         TextField mrbTextField = new TextField();
+        mrbTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(mrbLabel, 3, 28);
         audiologicalGridPane.add(mrbTextField, 4, 28);
         
         Label mbrLabel = new Label("MBR:");
         TextField mbrTextField = new TextField();
+        mbrTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(mbrLabel, 3, 29);
         audiologicalGridPane.add(mbrTextField, 4, 29);
         
         Label mrlLabel = new Label("MRL:");
         TextField mrlTextField = new TextField();
+        mrlTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(mrlLabel, 1, 27);
         audiologicalGridPane.add(mrlTextField, 2, 27);
         
         Label mlbLabel = new Label("MLB:");
         TextField mlbTextField = new TextField();
+        mlbTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(mlbLabel, 1, 28);
         audiologicalGridPane.add(mlbTextField, 2, 28);
         
         Label mblLabel = new Label("MBL:");
         TextField mblTextField = new TextField();
+        mblTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(mblLabel, 1, 29);
         audiologicalGridPane.add(mblTextField, 2, 29);
         
         //sd test section
         Label rsdLabel = new Label("R SD:");
         TextField rsdTextField = new TextField();
+        rsdTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(rsdLabel, 3, 30);
         audiologicalGridPane.add(rsdTextField, 4, 30);
         
         Label lsdLabel = new Label("L SD:");
         TextField lsdTextField = new TextField();
+        lsdTextField.setPromptText("Enter in dB");
         audiologicalGridPane.add(lsdLabel, 1, 30);
         audiologicalGridPane.add(lsdTextField, 2, 30);
         
@@ -289,6 +289,71 @@ public class AudiologicalTab extends Tab {
         audiologicalGridPane.add(commentSection, 0, 42);
 
         Button saveButton = new Button("Save");
+        saveButton.setOnAction((event)->
+        {
+        	left.setF25(l25CheckBox.isSelected());
+        	left.setF50(l50CheckBox.isSelected());
+        	left.setF1(l25CheckBox.isSelected());
+        	left.setF2(l50CheckBox.isSelected());
+        	left.setF3(l25CheckBox.isSelected());
+        	left.setF4(l50CheckBox.isSelected());
+        	left.setF6(l25CheckBox.isSelected());
+        	left.setF8(l50CheckBox.isSelected());
+        	left.setF10(l25CheckBox.isSelected());
+        	left.setF12(l50CheckBox.isSelected());
+        	
+        	left.setL50(ll50CheckBox.isSelected());
+        	left.setL1(ll1CheckBox.isSelected());
+        	left.setL2(ll2CheckBox.isSelected());
+        	left.setL3(ll3CheckBox.isSelected());
+        	left.setL4(ll4CheckBox.isSelected());
+        	left.setL6(ll6CheckBox.isSelected());
+        	left.setL8(ll8CheckBox.isSelected());
+        	left.setL12(ll12CheckBox.isSelected());
+        	left.setLtp(lltp.isSelected());
+        	
+        	left.setThresHearing(Integer.parseInt(tllTextField.getText()));
+        	left.setTinLoudMatch(Integer.parseInt(thl.getText()));
+        	left.setThresHearTLs(Integer.parseInt(tls.getText()));
+        	left.setWN(Integer.parseInt(wnl.getText()));
+        	
+        	left.setMr(Integer.parseInt(mrlTextField.getText()));
+        	left.setM_b(Integer.parseInt(mlbTextField.getText()));
+        	left.setMb_(Integer.parseInt(mblTextField.getText()));
+        	left.setSd(Integer.parseInt(lsdTextField.getText()));
+        	
+        	right.setF25(l25CheckBox.isSelected());
+        	right.setF50(l50CheckBox.isSelected());
+        	right.setF1(l25CheckBox.isSelected());
+        	right.setF2(l50CheckBox.isSelected());
+        	right.setF3(l25CheckBox.isSelected());
+        	right.setF4(l50CheckBox.isSelected());
+        	right.setF6(l25CheckBox.isSelected());
+        	right.setF8(l50CheckBox.isSelected());
+        	right.setF10(l25CheckBox.isSelected());
+        	right.setF12(l50CheckBox.isSelected());
+        	
+        	right.setL50(lr50CheckBox.isSelected());
+        	right.setL1(lr1CheckBox.isSelected());
+        	right.setL2(lr2CheckBox.isSelected());
+        	right.setL3(lr3CheckBox.isSelected());
+        	right.setL4(lr4CheckBox.isSelected());
+        	right.setL6(lr6CheckBox.isSelected());
+        	right.setL8(lr8CheckBox.isSelected());
+        	right.setL12(lr12CheckBox.isSelected());
+        	right.setLtp(lrtp.isSelected());
+        	
+        	right.setThresHearing(Integer.parseInt(tlrTextField.getText()));
+        	right.setTinLoudMatch(Integer.parseInt(thrLabel.getText()));
+        	right.setThresHearTLs(Integer.parseInt(tlrs.getText()));
+        	right.setWN(Integer.parseInt(wnr.getText()));
+        	
+        	right.setMr(Integer.parseInt(mrrTextField.getText()));
+        	right.setM_b(Integer.parseInt(mrbTextField.getText()));
+        	right.setMb_(Integer.parseInt(mbrTextField.getText()));
+        	right.setSd(Integer.parseInt(rsdTextField.getText()));
+        });
+        
         Button cancel = new Button("Cancel");
         audiologicalGridPane.add(saveButton, 2, 43);
         audiologicalGridPane.add(cancel, 3, 43);
