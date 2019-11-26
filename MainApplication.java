@@ -23,7 +23,7 @@ public class MainApplication extends Application {
         TabPane tabPane = new TabPane(); 
   
         // create audiological and pharmacology tabs
-        AudiologicalTab audiologicalTab = new AudiologicalTab("Audiological"); // diego
+        AudiologicalTab audiologicalTab = new AudiologicalTab("Audiological");
         PharmacologyTab pharmacologyTab = new PharmacologyTab("Pharmacology");
         
         // add tabs to tab pane
@@ -31,7 +31,7 @@ public class MainApplication extends Application {
         tabPane.getTabs().add(pharmacologyTab);
   
         // add all the child panes to the root pane        
-        //rootPane.getChildren().addAll(tabPane);  // **ONLY tabPane ADDED HERE?**
+        //rootPane.getChildren().addAll(tabPane);
         rootPane.setContent(tabPane);
         
         // create a scene
@@ -40,6 +40,7 @@ public class MainApplication extends Application {
         stage.setScene(scene); 
         stage.show(); 
         
+        // pass stage instance to the phamacology tab so that it can use the stage instance
         pharmacologyTab.passStage(stage);
     } 
   
