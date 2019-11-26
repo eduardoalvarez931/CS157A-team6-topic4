@@ -62,7 +62,6 @@ CREATE TABLE audiological (
     mlb					NUMERIC(28) NOT NULL,
     mbr					NUMERIC(28) NOT NULL,
     m_bl				NUMERIC(28) NOT NULL,
-    m_bb				NUMERIC(28) NOT NULL,
     r_sd				NUMERIC(28) NOT NULL,
     l_sd				NUMERIC(28) NOT NULL,
     lr50				NUMERIC(28) NOT NULL,
