@@ -20,6 +20,7 @@ public class AudiologicalTab extends Tab {
 		left = new LeftEar();
 		right = new RightEar();
 
+	ArrayList<TextField> textFieldArray = new ArrayList();
 		// create audiological grid
         GridPane audiologicalGridPane = new GridPane();
         audiologicalGridPane.setPadding(new Insets(10, 10, 10, 10)); 
@@ -355,9 +356,59 @@ public class AudiologicalTab extends Tab {
         });
         
         Button cancel = new Button("Cancel");
+		
+	// add textfields to array in order to loop through them for cancel function
+        textFieldArray.add(tprTextField);
+        textFieldArray.add(tplTextField);
+        textFieldArray.add(tlrTextField);
+        textFieldArray.add(tllTextField);
+        textFieldArray.add(thr);
+        textFieldArray.add(tlrs);
+        textFieldArray.add(thl);
+        textFieldArray.add(tls);
+        textFieldArray.add(wnr);
+        textFieldArray.add(wnl);
+        textFieldArray.add(mrrTextField);
+        textFieldArray.add(mrbTextField);
+        textFieldArray.add(mbrTextField);
+        textFieldArray.add(mrlTextField);
+        textFieldArray.add(mlbTextField);
+        textFieldArray.add(mblTextField);
+        textFieldArray.add(rsdTextField);
+        textFieldArray.add(lsdTextField);
         audiologicalGridPane.add(saveButton, 2, 43);
         audiologicalGridPane.add(cancel, 3, 43);
         
+	// cancel button event handler
+	EventHandler<ActionEvent> cancelEvent = new EventHandler<ActionEvent>() { 
+            public void handle(ActionEvent e) 
+            { 
+            	List<CheckBox> selectedBoxes = 
+            			Stream.of(r25CheckBox, r50CheckBox, r1CheckBox, r2CheckBox, r3CheckBox, 
+            					r4CheckBox, r6CheckBox, r8CheckBox, r10CheckBox, r12CheckBox,
+            					l25CheckBox, l50CheckBox, l1CheckBox, l2CheckBox, l3CheckBox, 
+            					l4CheckBox, l6CheckBox, l8CheckBox, l10CheckBox, l12CheckBox,
+            					ptRBox, nbRBox, nbnRBox, wnRBox, ptLBox, nbLBox, nbnLBox, wnLBox,
+            					lr50CheckBox, lr1CheckBox, lr2CheckBox, lr3CheckBox, lr4CheckBox,
+            					lr6CheckBox, lr8CheckBox, lr12CheckBox,
+            					ll50CheckBox, ll1CheckBox, ll2CheckBox, ll3CheckBox, ll4CheckBox,
+            					ll6CheckBox, ll8CheckBox, ll12CheckBox, lrtp, lltp)
+            			.filter(CheckBox::isSelected).collect(Collectors.toList());
+            	for(CheckBox box: selectedBoxes) {
+            		box.setSelected(false);
+            	}
+            	
+            	for(TextField tf: textFieldArray) {
+            		if (!tf.getText().trim().equals("")) {
+            			tf.clear();
+            		}
+            	}
+            	
+            	commentSection.clear();
+            } 
+        }; 
+        cancel.setOnAction(cancelEvent);	
+	
         this.setContent(audiologicalGridPane);
 	}
 	
