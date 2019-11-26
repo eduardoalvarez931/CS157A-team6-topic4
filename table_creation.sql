@@ -44,6 +44,7 @@ CREATE TABLE audiological (
     l10                 NUMERIC(28) NOT NULL,
     r12                 NUMERIC(28) NOT NULL,
     l12                 NUMERIC(28) NOT NULL,
+    t_pr				NUMERIC(28) NOT NULL,
     t_rm				VARCHAR(6) NOT NULL,
     t_lr				NUMERIC(28) NOT NULL,
     th_r				NUMERIC(28) NOT NULL,
