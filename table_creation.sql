@@ -3,7 +3,7 @@ CREATE TABLE patient (
     first_name                     VARCHAR(15) NOT NULL,
     last_name                      VARCHAR(25) NOT NULL,
     ssn							   VARCHAR(10) NOT NULL,
-    zip_code                       SMALLINT NOT NULL,
+    zip_code                       INT NOT NULL,
     city                           VARCHAR(32) NOT NULL,
     state                          VARCHAR(25) NOT NULL,
     country						   VARCHAR(25) NOT NULL,
