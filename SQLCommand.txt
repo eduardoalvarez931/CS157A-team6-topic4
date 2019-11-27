@@ -1,0 +1,112 @@
+package teamproj;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
+
+public class SQLCommand {	
+	
+	public static void saveToAudiological(LeftEar leftEar, RightEar rightEar, Patient patient) 
+	{
+		String insert = "INSERT INTO ";
+		String audioTable = "Audiological ";
+		String values = "VALUES ";
+		try {
+			Connection con = DBConnect.connect();
+			Statement stmt = con.createStatement();
+			 stmt.executeUpdate(insert+audioTable+values+"("+
+		
+					patient.getVisit().getVisitID() +", "+leftEar.getComments()+", "+
+					rightEar.getF25()+", " + leftEar.getF25()+", "+
+					rightEar.getF50()+", " + leftEar.getF50()+", "+
+					rightEar.getF1()+", " + leftEar.getF1()+", "+
+					rightEar.getF2()+", " + leftEar.getF2()+", "+
+					rightEar.getF3()+", " + leftEar.getF3()+", "+
+					rightEar.getF4()+", " + leftEar.getF4()+", "+
+					rightEar.getF6()+", " + leftEar.getF6()+", "+
+					rightEar.getF8()+", " + leftEar.getF8()+", "+
+					rightEar.getF10()+", " + leftEar.getF10()+", "+
+					rightEar.getF12()+", " + leftEar.getF12()+", "+
+					
+					rightEar.getTinPitchMatch()+", " + rightEar.getTinMatchType()+", "+
+					rightEar.getTinLoudMatch()+", " + rightEar.getThresHearing()+", "+
+					rightEar.getThresHearTLs()+", " + 
+					
+					leftEar.getTinPitchMatch()+", " + leftEar.getTinMatchType()+", "+
+					leftEar.getTinLoudMatch()+", " + leftEar.getThresHearing()+", "+
+					leftEar.getThresHearTLs()+", " + 
+					
+					rightEar.getWN()+", " + leftEar.getWN()+", "+
+					rightEar.getMr()+", " + leftEar.getMr()+", "+
+					rightEar.getM_b()+", "+ leftEar.getM_b()+", "+
+					rightEar.getMb_()+", "+ leftEar.getMb_()+", "+
+					
+					rightEar.getSd()+", "+leftEar.getSd()+", "+
+					
+					rightEar.getL50()+", "+rightEar.getL1()+", "+
+					rightEar.getL2()+", "+rightEar.getL3()+", "+
+					rightEar.getL4()+", "+rightEar.getL6()+", "+
+					rightEar.getL8()+", "+rightEar.getL12()+", "+
+					rightEar.getLtp()+", "+leftEar.getL50()+", "+
+					leftEar.getL1()+", "+leftEar.getL2()+", "+
+					leftEar.getL3()+", "+leftEar.getL4()+", "+
+					leftEar.getL6()+", "+leftEar.getL8()+", "+
+					leftEar.getL12()+", "+leftEar.getLtp()+");");
+		
+				stmt.close();
+				con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
+	}
+
+	public static Patient retrievePatient() {
+		
+		Patient patient = null;
+		try {
+			Connection con = DBConnect.connect();
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery(
+					"SELECT thc_number, first_name, last_name "+
+					"FROM patient "+
+					"INNER JOIN visit ON patient.thc_number = visit.thc" );
+			patient = new Patient(result.getString(2), result.getString(3), Integer.parseInt(result.getString(1)));
+//			SQLUtil.displayResultSet(result);
+			result.close();
+			stmt.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return patient;
+	}
+
+	public static int retrieveVisitID() {
+		int id = -1;
+		try {
+			Connection con = DBConnect.connect();
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery(
+					"SELECT visit_id "
+					+ "FROM visit "+
+					"INNER JOIN patient ON patient.thc_number = visit.thc"
+					);
+			id = result.getInt(1);
+//			SQLUtil.displayResultSet(result);
+			result.close();
+			stmt.close();
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return id;
+	}
+}
