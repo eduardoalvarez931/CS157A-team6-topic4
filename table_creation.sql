@@ -116,8 +116,7 @@ CREATE TABLE medication (
     usual_dose                     VARCHAR(45) NOT NULL,
     medication_action		   VARCHAR(48) NOT NULL,
     application			   VARCHAR(128) NOT NULL,
-    t_side			   BOOLEAN NOT NULL,
-    med_comments		   VARCHAR(256)
+    t_side			   BOOLEAN NOT NULL
 );
 ALTER TABLE medication ADD CONSTRAINT medication_pk PRIMARY KEY ( medication_id );
 ALTER TABLE medication ADD CONSTRAINT disease_fk FOREIGN KEY ( disease_id ) REFERENCES disease (disease_id);
