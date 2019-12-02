@@ -1,25 +1,35 @@
-package jdbcTutorial;
+package teamproj;
 
-import javafx.application.Application;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene; 
+import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
-import javafx.stage.Stage; 
-import javafx.scene.Group; 
-import javafx.scene.control.*; 
-import javafx.geometry.Insets; 
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 public class PharmacologyTab extends Tab {
 	private GridPane pharmacologyGridPane;
+//	private BorderPane pharmacologyBorderPane;
 	private Stage stage;
-	
+	public static TableView medicationTable = new TableView();
 	public PharmacologyTab(String s) {
 		super(s);
-		
-		
-		StackPane pharmacologyPane = new StackPane();
+
+StackPane pharmacologyPane = new StackPane();
 		
 		// create PHARMACOLOGY grid
         GridPane pharmacologyGridPane = new GridPane();
@@ -33,139 +43,407 @@ public class PharmacologyTab extends Tab {
         buttonGridPane.setVgap(10); 
         buttonGridPane.setHgap(20);
         
+        String patientName = AudiologicalTab.patient.getFirstName()+" "+AudiologicalTab.patient.getLastName();
+        String tchNum = AudiologicalTab.patient.getThcNumber()+"";
+        String visitId = AudiologicalTab.patient.getVisit().getVisitID()+"";
+        Date todayDate = Calendar.getInstance().getTime();
+        String today = todayDate.toString();
+        
+        
         // create labels and btns
-        Label patientNameLabel2 = new Label("Patient name: ");
-        Label thcNumLabel2 = new Label("THC #: ");
-        Label sequenceNumberLabel = new Label("Visit Sequence #: ");
+        Label patientNameLabel2 = new Label("Patient name:\t\t\t"+patientName);
+        Label thcNumLabel2 = new Label("THC #:\t\t\t\t"+tchNum);
+        Label sequenceNumberLabel = new Label("Visit Sequence #:\t\t"+visitId);
+        Label visitDateLabel = new Label("Visit's Date:\t\t\t"+todayDate);
         Button addMedicationButton = new Button("Add Medication");
         Button editMedicationButton = new Button("Edit Medication");
-        
-        // create medication table
-        TableView medicationTable = new TableView();
-        TableColumn medNumCol = new TableColumn("Med #");
-        TableColumn medicationCol = new TableColumn("Medication");
-        TableColumn genericCol = new TableColumn("Generic");
-        TableColumn doseCol = new TableColumn("Dose");
-        TableColumn durationCol = new TableColumn("Duration");
-        TableColumn catChemCol = new TableColumn("Cat Chem");
-        TableColumn actionCol = new TableColumn("Action");
-        TableColumn applicationCol = new TableColumn("Application");
-        TableColumn usualCol = new TableColumn("Usual");
-        TableColumn tSideCol = new TableColumn("T side");
-        
-        medicationTable.getColumns().addAll(medNumCol, medicationCol, genericCol, doseCol, 
-        		durationCol, catChemCol, actionCol, applicationCol, usualCol, tSideCol);
-        
-        // add components to grid
-        pharmacologyGridPane.add(patientNameLabel2, 0, 0);
-        pharmacologyGridPane.add(thcNumLabel2, 0, 1);
-        pharmacologyGridPane.add(sequenceNumberLabel, 0, 2);
-        buttonGridPane.add(addMedicationButton, 0, 5);
-        buttonGridPane.add(editMedicationButton, 1, 5);
-        pharmacologyGridPane.add(medicationTable, 0, 7);
-        
-        // add medication window
-        addMedicationButton.setOnAction(new EventHandler<ActionEvent>() {
-	    	 
+
+
+		ObservableList selectedRows = medicationTable.getSelectionModel().getSelectedItems();
+		String[] attributes = new String[10];
+		
+		//rrayList<String> string = (ArrayList<String>) selectedRows.subList(0, 2);
+		selectedRows.addListener(new ListChangeListener() {
+		    @Override
+		    public void onChanged(Change c) {
+		    	String selectedRow = selectedRows.get(0).toString().replace("[", "");
+		    	selectedRow = selectedRow.replace("]", "");
+		    	String[] selectRowSplit = selectedRow.split(", ");
+		    	for(String s: selectRowSplit)
+		        System.out.println(s);
+		    }
+		});
+		
+		/*
+		 * ADD MEDICATION WINDOW
+		 */
+		Button addSave = new Button("Save");
+		Button addCancel = new Button("Cancel");
+		addMedicationButton.setOnAction(new EventHandler<ActionEvent>() {
+		ComboBox medicationNameComboBox = new ComboBox();
+
 			@Override
 			public void handle(ActionEvent event) {
 				StackPane addMedicationStackPane = new StackPane();
-				
+
 				GridPane addMedicationGridPane = new GridPane();
 				addMedicationGridPane.setPadding(new Insets(10, 10, 10, 10));
 				addMedicationGridPane.setVgap(10);
 				addMedicationGridPane.setHgap(20);
 
 				Label medicationNameLabel = new Label("Medication Name: ");
-				Label genericLabel = new Label("Generic: ");
 				Label doseLabel = new Label("Dose: ");
 				Label durationLabel = new Label("Duration: ");
-				Label catChemLabel = new Label("Category Chemical: ");
-				Label actionLabel = new Label("Action: ");
-				Label applicationLabel = new Label("Application: ");
-				Label usualLabel = new Label("Usual: ");
-				Label tSideLabel = new Label("T side: ");
-				
-				TextField medicationNameTextField = new TextField();
-				TextField genericTextField = new TextField();
+				Label commentsLabel = new Label("Comments: ");
+
+				Connection conn;
+				try {
+					DBConnect.connect();
+					Statement statement = DBConnect.conn.createStatement();
+					ResultSet rs;
+					rs = statement.executeQuery("SELECT medication_name FROM medication;");
+
+					while (rs.next()) {
+						medicationNameComboBox.getItems().addAll(rs.getString("medication_name"));
+					}
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+					System.out.println("Error on creating combo box");
+				}
+
 				TextField doseTextField = new TextField();
 				TextField durationTextField = new TextField();
-				TextField catChemTextField = new TextField();
-				TextField actionTextField = new TextField();
-				TextField applicationTextField = new TextField();
-				TextField usualTextField = new TextField();
-				TextField tSideTextField = new TextField();
+				TextField commentsTextField = new TextField();
 
-				Button genericButton = new Button("Add Generic");
-				Button diseaseButton = new Button("Add Disease");
-				Button chemicalButton = new Button("Add Chemical");
-				Button save = new Button("Save");
-				Button cancel = new Button("Cancel");
-				
 				// add labels to pane
 				addMedicationGridPane.add(medicationNameLabel, 0, 0);
-				addMedicationGridPane.add(genericLabel, 0, 1);
-				addMedicationGridPane.add(doseLabel, 0, 2);
-				addMedicationGridPane.add(durationLabel, 0, 3);
-				addMedicationGridPane.add(catChemLabel, 0, 4);
-				addMedicationGridPane.add(actionLabel, 0, 5);
-				addMedicationGridPane.add(applicationLabel, 0, 6);
-				addMedicationGridPane.add(usualLabel, 0, 7);
-				addMedicationGridPane.add(tSideLabel, 0, 8);
-				
+				addMedicationGridPane.add(doseLabel, 0, 1);
+				addMedicationGridPane.add(durationLabel, 0, 2);
+				addMedicationGridPane.add(commentsLabel, 0, 3);
+
 				// add text fields to pane
-				addMedicationGridPane.add(medicationNameTextField, 1, 0);
-				addMedicationGridPane.add(genericTextField, 1, 1);
-				addMedicationGridPane.add(doseTextField, 1, 2);
-				addMedicationGridPane.add(durationTextField, 1, 3);
-				addMedicationGridPane.add(catChemTextField, 1, 4);
-				addMedicationGridPane.add(actionTextField, 1, 5);
-				addMedicationGridPane.add(applicationTextField, 1, 6);
-				addMedicationGridPane.add(usualTextField, 1, 7);
-				addMedicationGridPane.add(tSideTextField, 1, 8);
-				
+				addMedicationGridPane.add(medicationNameComboBox, 1, 0);
+				addMedicationGridPane.add(doseTextField, 1, 1);
+				addMedicationGridPane.add(durationTextField, 1, 2);
+				addMedicationGridPane.add(commentsTextField, 1, 3);
+
 				// add buttons to pane
-				addMedicationGridPane.add(genericButton, 2, 0);
-				addMedicationGridPane.add(diseaseButton, 2, 1);
-				addMedicationGridPane.add(chemicalButton, 2, 2);
-				addMedicationGridPane.add(save, 2, 3);
-				addMedicationGridPane.add(cancel, 2, 4);
-				
+				addMedicationGridPane.add(addSave, 2, 0);
+				addMedicationGridPane.add(addCancel, 2, 1);
+
+				/*
+				 * Save handler for Add Medication Window
+				 */
+				EventHandler<ActionEvent> addSaveEvent = new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						String medName = (String) medicationNameComboBox.getValue();
+						String dose = doseTextField.getText();
+						String duration = durationTextField.getText();
+						String comments = commentsTextField.getText();
+						String getMedicationID = "SELECT medication_id FROM medication WHERE medication_name = " + "'"
+								+ medName + "'";
+						String getVisitID = "select MAX(visit_id) from visit inner join patient ON visit.thc = patient.thc_number";
+						Connection conn;
+						try {
+							DBConnect.connect();
+							Statement stmt = DBConnect.conn.createStatement();
+							int visit_id = 0;
+							stmt.executeUpdate(
+									"INSERT INTO pharmacology (medicament_id, visit_id, dose, duration_mo, comments) "
+											+ "VALUES(" + "(" + getMedicationID + ")" + ", " + "(" + getVisitID + ")"
+											+ ", " + "'" + dose + "'" + ", " + "'" + duration + "'" + ", " + "'"
+											+ comments + "'" + ");"
+							);
+
+							updateTable();
+							
+							System.out.println(" SUCCESS!\n");
+							DBConnect.conn.close();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+							System.out.println("Error on Inserting Add Medication Data");
+						}
+					}
+				};
+				addSave.setOnAction(addSaveEvent);
+
+				/*
+				 * Cancel handler for Add Medication Window
+				 */
+				ArrayList<TextField> textFieldArray = new ArrayList<TextField>();
+				textFieldArray.add(doseTextField);
+				textFieldArray.add(durationTextField);
+				textFieldArray.add(commentsTextField);
+
+				EventHandler<ActionEvent> cancelEvent = new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						medicationNameComboBox.setValue(null);
+						for (TextField tf : textFieldArray) {
+							if (!tf.getText().trim().equals("")) {
+								tf.clear();
+							}
+						}
+					}
+				};
+				addCancel.setOnAction(cancelEvent);
+
 				addMedicationStackPane.getChildren().addAll(addMedicationGridPane);
 
-				Scene secondScene = new Scene(addMedicationStackPane, 500, 400);
+				Scene secondScene = new Scene(addMedicationStackPane, 400, 175);
 
 				// New window (Stage)
-				Stage newWindow = new Stage();
-				newWindow.setTitle("Add Medication");
-				newWindow.setScene(secondScene);
+				Stage addMedicationWindow = new Stage();
+				addMedicationWindow.setTitle("Add Medication");
+				addMedicationWindow.setScene(secondScene);
 
 				// Specifies the modality for new window.
-				newWindow.initModality(Modality.WINDOW_MODAL);
+				addMedicationWindow.initModality(Modality.WINDOW_MODAL);
 
 				// Specifies the owner Window (parent) for new window
-				newWindow.initOwner(stage);
+				addMedicationWindow.initOwner(stage);
 
 				// Set position of second window, related to primary window.
-				newWindow.setX(stage.getX() + 200);
-				newWindow.setY(stage.getY() + 100);
+				addMedicationWindow.setX(stage.getX() + 200);
+				addMedicationWindow.setY(stage.getY() + 100);
 
-				newWindow.show();
-	        }
-         });
-        
-        pharmacologyPane.getChildren().addAll(pharmacologyGridPane,buttonGridPane);
-        this.setContent(pharmacologyPane);
-        
+				addMedicationWindow.show();
+			}
+		});
+
+		
+		
+		/*
+		 * MEDICATION TABLE
+		 */
+		updateTable();
+
+		ObservableList<String> row;
+		row = medicationTable.getSelectionModel().getSelectedItems();
+		
+		
+		
+
+		/*
+		 * EDIT MEDICATION WINDOW
+		 */
+		Button editSave = new Button("Save");
+		Button editCancel = new Button("Cancel");
+		editMedicationButton.setOnAction(new EventHandler<ActionEvent>() {
+			ComboBox medicationNameComboBox = new ComboBox();
+
+			@Override
+			public void handle(ActionEvent event) {
+				StackPane editMedicationStackPane = new StackPane();
+
+				GridPane editMedicationGridPane = new GridPane();
+				editMedicationGridPane.setPadding(new Insets(10, 10, 10, 10));
+				editMedicationGridPane.setVgap(10);
+				editMedicationGridPane.setHgap(20);
+
+				Label medicationNameLabel = new Label("Medication Name: ");
+				Label doseLabel = new Label("Dose: ");
+				Label durationLabel = new Label("Duration: ");
+				Label commentsLabel = new Label("Comments: ");
+
+				Connection conn;
+				try {
+					DBConnect.connect();
+					Statement statement = DBConnect.conn.createStatement();
+					ResultSet rs;
+					rs = statement.executeQuery("SELECT medication_name FROM medication;");
+
+					while (rs.next()) {
+
+						medicationNameComboBox.getItems().addAll(rs.getString("medication_name"));
+					}
+				} catch (SQLException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+					System.out.println("Error on creating combo box");
+				}
+
+				TextField doseTextField = new TextField();
+				TextField durationTextField = new TextField();
+				TextField commentsTextField = new TextField();
+
+				// set values of text fields
+				//medicationNameComboBox.setValue(selectedRow.substring(4, selectedRow.indexOf(",")));
+				
+				
+				// add labels to pane
+				editMedicationGridPane.add(medicationNameLabel, 0, 0);
+				editMedicationGridPane.add(doseLabel, 0, 1);
+				editMedicationGridPane.add(durationLabel, 0, 2);
+				editMedicationGridPane.add(commentsLabel, 0, 3);
+
+				// add text fields to pane
+				editMedicationGridPane.add(medicationNameComboBox, 1, 0);
+				editMedicationGridPane.add(doseTextField, 1, 1);
+				editMedicationGridPane.add(durationTextField, 1, 2);
+				editMedicationGridPane.add(commentsTextField, 1, 3);
+
+				
+				// add buttons to pane
+				editMedicationGridPane.add(editSave, 2, 0);
+				editMedicationGridPane.add(editCancel, 2, 1);
+
+				/*
+				 * Save handler for Edit Medication Window
+				 */
+				EventHandler<ActionEvent> editSaveEvent = new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						String medName = (String) medicationNameComboBox.getValue();
+						String dose = doseTextField.getText();
+						String duration = durationTextField.getText();
+						String comments = commentsTextField.getText();
+						String getMedicationID = "SELECT medication_id FROM medication WHERE medication_name = " + "'"
+								+ medName + "'";
+						String getVisitID = "select MAX(visit_id) from visit inner join patient ON visit.thc = patient.thc_number";
+						Connection conn;
+						try {
+							DBConnect.connect();
+							Statement stmt = DBConnect.conn.createStatement();
+							stmt.executeUpdate(
+									"UPDATE pharmacology SET medicament_id = " + "(" + getMedicationID + ")" + ", visit_id = " + "(" + getVisitID + ")"
+									+ ", dose = " + "'" + dose + "'" + ", duration = " + "'" + duration + "'" + ", comments = " + "'" + comments + "'" + ");"
+							);
+						
+
+							System.out.println(" SUCCESS!\n");
+							DBConnect.conn.close();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+							System.out.println("Error on updating Medication Data");
+						}
+					}
+				};
+				editSave.setOnAction(editSaveEvent);
+
+				/*
+				 * Cancel handler for Edit Medication Window
+				 */
+				ArrayList<TextField> textFieldArray = new ArrayList<TextField>();
+				textFieldArray.add(doseTextField);
+				textFieldArray.add(durationTextField);
+				textFieldArray.add(commentsTextField);
+
+				EventHandler<ActionEvent> cancelEvent = new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+						medicationNameComboBox.setValue(null);
+						for (TextField tf : textFieldArray) {
+							if (!tf.getText().trim().equals("")) {
+								tf.clear();
+							}
+						}
+					}
+				};
+				editCancel.setOnAction(cancelEvent);
+
+				editMedicationStackPane.getChildren().addAll(editMedicationGridPane);
+
+				Scene secondScene = new Scene(editMedicationStackPane, 400, 175);
+
+				// New window (Stage)
+				Stage editMedicationWindow = new Stage();
+				editMedicationWindow.setTitle("Edit Medication");
+				editMedicationWindow.setScene(secondScene);
+
+				// Specifies the modality for new window.
+				editMedicationWindow.initModality(Modality.WINDOW_MODAL);
+
+				// Specifies the owner Window (parent) for new window
+				editMedicationWindow.initOwner(stage);
+
+				// Set position of second window, related to primary window.
+				editMedicationWindow.setX(stage.getX() + 200);
+				editMedicationWindow.setY(stage.getY() + 100);
+
+				editMedicationWindow.show();
+			}
+		});
+		
+		// add components to grid
+				pharmacologyGridPane.add(patientNameLabel2, 0, 0);
+				pharmacologyGridPane.add(thcNumLabel2, 0, 1);
+				pharmacologyGridPane.add(sequenceNumberLabel, 0, 2);
+				buttonGridPane.add(addMedicationButton, 0, 5);
+				buttonGridPane.add(editMedicationButton, 1, 5);
+				//pharmacologyGridPane.add(medicationTable, 0, 7);
+				pharmacologyPane.setMargin(medicationTable, new Insets(120, 10, 10, 10));
+				pharmacologyPane.setAlignment(medicationTable, Pos.BOTTOM_CENTER);
+				pharmacologyPane.getChildren().addAll(pharmacologyGridPane, buttonGridPane, medicationTable);
+				
+				this.setContent(pharmacologyPane);
 	}
 	
-	public GridPane getPharmacologyGridPane() {
-		return pharmacologyGridPane;
-	}
 
+	
 	public void passStage(Stage stage) {
 		this.stage = stage;
+
+	}
+	
+	
+	/**
+	 * Updates the content of the medication table
+	 */
+	public static void updateTable() {
 		
+		ObservableList<ObservableList> data;
+		
+		medicationTable.setPrefWidth(1200);
+		medicationTable.setPrefHeight(500);
+
+		data = FXCollections.observableArrayList();
+		try {
+			DBConnect.connect();
+			// SQL FOR SELECTING ALL OF CUSTOMER
+			String SQL = "SELECT medication_id AS 'Med #', medication_name AS 'Medication', generic_name AS 'Generic', dose AS 'Dose', \n"
+					+ "duration_mo AS 'Duration', chemical_name AS 'Cat chem', medication_action AS 'Action', application AS 'Application', \n"
+					+ "usual_dose AS 'Usual', t_side AS 'T side'\n" + "FROM medication\n"
+					+ "INNER JOIN pharmacology ON medication.medication_id = pharmacology.medicament_id\n"
+					+ "INNER JOIN generic ON medication.generic_id = generic.generic_id\n"
+					+ "INNER JOIN cat_chem ON medication.chem_id = cat_chem.chemical_id;";
+			// ResultSet
+			ResultSet rs = DBConnect.conn.createStatement().executeQuery(SQL);
+
+			// Add table columns dynamically
+			for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+				// We are using non property style for making dynamic table
+				
+				final int j = i;
+				TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
+				col.setCellValueFactory(
+						new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+							public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
+								return new SimpleStringProperty(param.getValue().get(j).toString());
+							}
+						});
+
+				medicationTable.getColumns().addAll(col);
+				System.out.println("Column [" + i + "] ");
+			}
+
+			// Add data to ObservableList
+			while (rs.next()) {
+				// Iterate Row
+				ObservableList<String> row = FXCollections.observableArrayList();
+				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+					// Iterate Column
+					row.add(rs.getString(i));
+				}
+				System.out.println("Row [1] added " + row);
+				data.add(row);
+
+			}
+
+			// Add data to TableView
+			medicationTable.setItems(data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Error on Building Data");
+		}
 	}
 
 }
